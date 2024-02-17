@@ -1,24 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ReactElement, useReducer } from "react";
+import "./App.css";
+import SetTimer from "./SetTimer";
+import { reducer } from "./store/Reducers";
 
-function App() {
+type State = {
+  count: number;
+};
+
+const initialState: State = {
+  count: 0,
+};
+
+function App(): ReactElement<State> {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const handleAdd = () => {
+    dispatch({
+      type: "setCount",
+      value: state.count + 1,
+    });
+  };
+
+  const handleMinus = () => {
+    if (state.count < 1) return;
+
+    dispatch({
+      type: "removeCount",
+      value: state.count - 1,
+    });
+  };
+
+  const handleReset = () => {
+    dispatch({
+      type: "reset",
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <div>
+        <h1>This is a Button</h1>
+        <CreateButton title="Create Button" />
+      </div> */}
+      <div style={{marginBottom: "2rem"}}>
+        <h1>This is a Counter App</h1>
+        <p>{state.count}</p>
+        <div>
+          <button onClick={handleAdd}>Add</button>
+          <button onClick={handleMinus}>Minus</button>
+          <button onClick={handleReset}>Reset</button>
+        </div>
+      </div>
+      <SetTimer />
     </div>
   );
 }
